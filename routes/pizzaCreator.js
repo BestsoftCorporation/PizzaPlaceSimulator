@@ -46,12 +46,12 @@ router.post("/order", async(req, res)=>{
               time+=3000;
             }
             pizza.i.forEach(element => {
-                ids.push(mongoose.Types.ObjectId(element._id));
+                ids.push(mongoose.Types.ObjectId(element._id)); //add pizza ingredients to array
             });
             
         });
 
-         Ingredients.aggregate([ { $match: { '_id':{$in:ids}}},
+         Ingredients.aggregate([ { $match: { '_id':{$in:ids}}}, //sum time for all pizza ingredients ordered
              { $group:
                 { _id : null, sum : { $sum: "$time" } }
             }]).exec((err, result) => {
@@ -86,6 +86,18 @@ router.post("/checkOrder", function(req, res){
      }
   
      
+  });
+
+});
+
+
+router.post("/cancelOrder", function(req, res){
+  Queue.find({ id: mongoose.Types.ObjectId(req.body.orderID)}, function (err, docs) {
+     if (docs.length==0){
+      res.json({ message: "Your order is finsished. :)" });
+     }else{
+       res.json({timeLeft:docs[0].time})
+     }   
   });
 
 });
