@@ -12,12 +12,8 @@ var admin = require("./routes/admin");
 app.use( bodyParser.json() ); 
 
 app.get("/",(req,res) => {
-    res.send('homme');
+    res.send('Read readme for urls :)');
 });
-
-
-
-
 
 
 app.use('/', pizzaCreator);

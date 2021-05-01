@@ -43,13 +43,13 @@ router.post("/order", async (req, res) => {
         order.pizzas.forEach(pizza => {
           if (pizza.size == "Small") {
             time += 1000;
-            prc+=200;
+            prc += 200;
           } else if (pizza.size == "Medium") {
             time += 2000;
-            prc+=400;
+            prc += 400;
           } else if (pizza.size == "Large") {
             time += 3000;
-            prc+=600;
+            prc += 600;
           }
           pizza.i.forEach(element => {
             ids.push(mongoose.Types.ObjectId(element._id)); //add pizza ingredients to array
@@ -67,18 +67,18 @@ router.post("/order", async (req, res) => {
           }
           time += result[0].sum;
           prc += result[0].sumPrice;
-          console.log("Price:"+prc);
+          console.log("Price:" + prc);
           const queue = new Queue({
             id: order._id,
             time: time,
           });
           queue.save();
-          // prepare();
+          prepare();
 
           Order.updateOne({ _id: order._id }, {
-            price:prc
+            price: prc
           }, function (err, numberAffected, rawResponse) {
-      
+
           })
 
           res.json({ "orderID": order._id, "time": time, "PlaceInOrder": count });
@@ -106,18 +106,32 @@ router.post("/checkOrder", function (req, res) {
 
 router.delete("/cancelOrder", function (req, res) {
 
+  Order.deleteOne({ _id: mongoose.Types.ObjectId(req.body.orderID) }, function (err, docs) {});
   Queue.deleteOne({ id: mongoose.Types.ObjectId(req.body.orderID) }, function (err, docs) {
     res.json({ message: "Your order is canceled :(" });
   });
+  
 
 });
 
 
+const timer = ms => new Promise(res => setTimeout(res, ms));
+
+
+router.post("/startPreparing", function (req, res) {
+   prepare();
+   res.json({message:"started"});
+});
+
 async function prepare() {
-  console.log(1);
-  await sleep.sleep(1000);
-  console.log(2);
-  return;
+  let qu=await Queue.find({ }).exec();
+  
+  for (const element of qu) {
+    await timer(element.time);
+    Queue.deleteOne({ _id: mongoose.Types.ObjectId(element._id ) }, function (err, docs) {});
+    console.log(element._id + " order successefully complited :)");
+  }
+
 }
 
 
