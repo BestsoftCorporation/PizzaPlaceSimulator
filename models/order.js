@@ -6,7 +6,9 @@ var Order = mongoose.Schema({
     address: String,
     phone: String,
     pizzas:[
+        
         {
+            size:String,
             i:[
               {_id: String}
             ]
