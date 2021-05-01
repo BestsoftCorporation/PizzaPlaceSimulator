@@ -20,10 +20,9 @@ router.post("/order", async(req, res)=>{
   });
   var count = 0;
 
-  Order
+  await Queue
     .estimatedDocumentCount()
     .then((docCount) => {
-      console.log(docCount);
       count = docCount;
     })
     .catch((err) => {
@@ -33,7 +32,7 @@ router.post("/order", async(req, res)=>{
   if (count >= 15) {
     res.json({ message: "Sorry, we are busy right now , try again later :(" });
   } else {
-  await  order
+  await order
       .save()
       .then((data) => {
         var time=0;
@@ -60,7 +59,13 @@ router.post("/order", async(req, res)=>{
                   res.json({ message: err });
                 }
                 time+=result[0].sum; 
-                res.json({"time":time,"order":count});
+                const queue = new Queue({
+                  id:order._id,
+                  time:time,
+                });
+                queue.save();
+
+                res.json({"orderID":order._id,"time":time,"PlaceInOrder":count});
             }) 
       })
       .catch((err) => {
@@ -68,5 +73,23 @@ router.post("/order", async(req, res)=>{
       });
   }
 });
+
+
+router.post("/checkOrder", function(req, res){
+   
+  
+  Queue.find({ id: mongoose.Types.ObjectId(req.body.orderID)}, function (err, docs) {
+     if (docs.length==0){
+      res.json({ message: "Your order is finsished. :)" });
+     }else{
+       res.json({timeLeft:docs[0].time})
+     }
+  
+     
+  });
+
+});
+
+
 
 module.exports = router;

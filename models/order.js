@@ -12,7 +12,9 @@ var Order = mongoose.Schema({
             i:[
               {_id: String}
             ]
-        }]
+        }],
+    price:Number
+      
   });
 
   module.exports = mongoose.model('order',Order,'order')
