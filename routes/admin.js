@@ -72,22 +72,23 @@ router.get("/TopIngredientsOrdered", function (req, res) {
         if (err) return res.status(401).json({
             title: 'unauthorized'
         });
-
+        let arr=[];
         Order.find({}, function (err, orders) {
             orders.forEach(order => {
                 order.pizzas.forEach(pizza => {
                     pizza.i.forEach(element => {
-                        ingredient.find({
-                            '_id': { $in: [mongoose.Types.ObjectId(element._id)] }
-                        }, function (err, docs) {
-                            res.send(docs);
-                        });
-
+                       arr.push(mongoose.Types.ObjectId(element._id));
                     });
-
                 });
             });
+            ingredient.find({
+                '_id': { $in: arr }
+            }, function (err, docs) {
+                res.send(docs);
+            }).limit(5);
         });
+        
+       
     });
 });
 

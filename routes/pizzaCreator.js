@@ -104,6 +104,18 @@ router.post("/checkOrder", function (req, res) {
 });
 
 
+
+router.get("/otherOrders", function (req, res) {
+      var pizzas=[];
+      Order.find({}, function (err, order) {
+          order.forEach(element => {
+              pizzas.push(element.pizzas);
+          });
+          res.send(pizzas)
+      });
+});
+
+
 router.delete("/cancelOrder", function (req, res) {
 
   Order.deleteOne({ _id: mongoose.Types.ObjectId(req.body.orderID) }, function (err, docs) {});
