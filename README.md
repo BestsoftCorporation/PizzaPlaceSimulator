@@ -1,7 +1,8 @@
 # PizzaPlaceSimulator
 
-Order examle, post user contact, pizza(s) size(s), pizza(s) ingredient(s) id(s)
-http://localhost:3000/order 
+# Order examle, post user contact, pizza(s) size(s), pizza(s) ingredient(s) id(s)
+## http://localhost:3000/order 
+## Method: post
 ```json
 {
     "firstName":"Marko",
@@ -19,17 +20,18 @@ http://localhost:3000/order
 }
 ```
 
-Check order example, post order id which you get after posting (creating) order
-http://localhost:3000/checkOrder
-
+# Check order example, post order id which you get after posting (creating) order
+## http://localhost:3000/checkOrder
+## Method: post
 ```json
 {
     "orderID": "608d4d4655830a312e3ad80c"
 }
 ```
 
-Cancel order example, post order id which you get after posting (creating) order
-http://localhost:3000/cancelOrder
+#Cancel order example, post order id which you get after posting (creating) order
+## http://localhost:3000/cancelOrder
+## Method: delete
 
 ```json
 {

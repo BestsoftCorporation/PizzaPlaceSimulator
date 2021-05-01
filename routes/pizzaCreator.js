@@ -84,20 +84,14 @@ router.post("/checkOrder", function(req, res){
      }else{
        res.json({timeLeft:docs[0].time})
      }
-  
-     
   });
-
 });
 
 
-router.post("/cancelOrder", function(req, res){
-  Queue.find({ id: mongoose.Types.ObjectId(req.body.orderID)}, function (err, docs) {
-     if (docs.length==0){
-      res.json({ message: "Your order is finsished. :)" });
-     }else{
-       res.json({timeLeft:docs[0].time})
-     }   
+router.delete("/cancelOrder", function(req, res){
+
+  Queue.deleteOne({ id: mongoose.Types.ObjectId(req.body.orderID)}, function (err, docs) {
+    res.json({ message: "Your order is canceled :(" });
   });
 
 });
